@@ -38,10 +38,17 @@ Open [http://localhost:3000](http://localhost:3000) and enter any technical topi
 ## Environment variables
 
 ```bash
-HYPERBROWSER_API_KEY=   # from hyperbrowser.ai
-SERPER_API_KEY=         # from serper.dev — used to find source URLs
-OPENAI_API_KEY=         # used for graph generation with GPT-4o
+HYPERBROWSER_API_KEY=          # from hyperbrowser.ai
+SERPER_API_KEY=                # from serper.dev — used to find source URLs
+OPENAI_API_KEY=                # used for graph generation with GPT-4o
+HYPERBROWSER_MAX_CONCURRENCY=1 # free plan: keep at 1. paid plans can increase this.
 ```
+
+## Free plan & concurrency
+
+The free Hyperbrowser plan supports **1 concurrent browser session**. By default the app scrapes URLs **sequentially** (one at a time), so it works out of the box on any plan.
+
+If you hit a concurrency limit the app will show an amber warning banner with an **Upgrade plan** link rather than crashing silently. To unlock parallel scraping, upgrade at [hyperbrowser.ai](https://hyperbrowser.ai) and set `HYPERBROWSER_MAX_CONCURRENCY` to match your plan's limit.
 
 ## Stack
 

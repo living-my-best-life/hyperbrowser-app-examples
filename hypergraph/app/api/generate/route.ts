@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchDocs } from "@/lib/serper";
-import { scrapeUrls } from "@/lib/hyperbrowser";
+import { scrapeUrls, ConcurrencyPlanError } from "@/lib/hyperbrowser";
 import { generateGraph } from "@/lib/generator";
 
 export const maxDuration = 60;
@@ -36,6 +36,17 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ graph, files });
   } catch (err) {
+    if (err instanceof ConcurrencyPlanError) {
+      console.warn("[generate] Concurrency plan limit hit:", err.message);
+      return NextResponse.json(
+        {
+          error: err.message,
+          upgradeUrl: "https://hyperbrowser.ai",
+          hint: "Set HYPERBROWSER_MAX_CONCURRENCY=1 in your .env (it is already the default) and ensure no other requests are running simultaneously.",
+        },
+        { status: 402 }
+      );
+    }
     console.error("Generate error:", err);
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Internal server error" },
